@@ -2,7 +2,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.File;
 
-public class Person {
+public class Person{
     private String name;
     private String hobby;
     private String age;
@@ -56,9 +56,10 @@ public class Person {
             File f = new File("src/person.data");
             f.createNewFile(); // this method will create the file if it does not exist; if it does exist, it does nothing
             FileWriter fw = new FileWriter("src/person.data");
+            fw = new FileWriter("src/person.data", true);
             fw.write(name + "\n");
             fw.write(hobby + "\n");
-            fw.write(age);
+            fw.write(age + "\n");
             fw.close();
             System.out.println("Data saved!");
         }

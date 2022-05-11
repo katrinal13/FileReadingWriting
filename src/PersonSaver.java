@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.io.FileReader;
 
 public class PersonSaver
 {
@@ -13,24 +14,45 @@ public class PersonSaver
         // time running the program and it hasn't been created yet
         // (in which case, an exception is thrown and the "catch"
         // block is executed)
+        Scanner scan = new Scanner(System.in);
         try {
             File f = new File("src/person.data");
+            Scanner input = new Scanner(f);
+
+            while (input.hasNextLine())
+            {
+                System.out.println(input.nextLine());
+            }
+
             Scanner s = new Scanner(f); // a Scanner can be initialized with a File object (rather than System.in)
-            int line = 1;
             String name = "";
             String hobby = "";
             String age = "";
 
+            System.out.println(f);
+            System.out.print("Select the Person whose data to edit (indicate number): ");
+            int person = scan.nextInt();
             // reading from the file line by line
-            while (s.hasNextLine()) {
-                String data = s.nextLine();
-                if (line == 1) {
+
+            int lines = 0;
+            while (s.hasNextLine())
+            {
+                s.nextLine();
+                lines++;
+            }
+            int lineP = lines/person * (person - 1);
+
+            Scanner s2 = new Scanner(f);
+            int line = 0;
+            while (s2.hasNextLine()) {
+                String data = s2.nextLine();
+                if (line == lineP) {
                     name = data;
                 }
-                if (line == 2) {
+                if (line == lineP + 1) {
                     hobby = data;
                 }
-                if (line == 3)
+                if (line == lineP + 2)
                 {
                     age = data;
                 }
@@ -49,11 +71,19 @@ public class PersonSaver
         // a name and hobby; when the person gets saved,
         // the file gets created (so the next time the program runs,
         // the file exists and can be loaded!)
-        catch (FileNotFoundException e) {
+        catch (FileNotFoundException e)
+        {
             System.out.println("file doesn't exist yet! exception message: " + e.getMessage());
-
+            String exit = "";
+            System.out.print("Would you like to add a person: (Y)es or (N)o: ");
+            exit = scan.nextLine().toLowerCase();
             // let's create a person and save to file so that it does exist
-            createPerson();
+            while (!exit.equals("n"))
+            {
+                createPerson();
+                System.out.print("Would you like to add a person: (Y)es or (N)o: ");
+                exit = scan.nextLine().toLowerCase();
+            }
         }
     }
 
@@ -103,18 +133,14 @@ public class PersonSaver
     // the program is run and the file doesn't yet exist
     private void createPerson()
     {
-        Person p = new Person();
-        System.out.println(p.greet());
-        System.out.print("What is your name? ");
         Scanner in = new Scanner(System.in);
+        System.out.print("What is your name? ");
         String name = in.nextLine();
         System.out.print("What is your hobby? ");
         String hobby = in.nextLine();
         System.out.print("What is your age? ");
         String age = in.nextLine();
-        p.setAge(age);
-        p.setName(name);
-        p.setHobby(hobby);
+        Person p = new Person(name, hobby, age);
         p.save();
     }
 }
